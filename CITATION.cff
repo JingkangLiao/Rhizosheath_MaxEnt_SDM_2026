@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "Rhizosheath_SDM_Code"
+message: "If you use this code, please cite the archived repository release and the associated manuscript."
+type: software
+
+authors:
+  - family-names: "Liao"
+    given-names: "Jingkang"
+    affiliation: "Lanzhou University"
+
+repository-code: "https://github.com/[GitHub-username]/Rhizosheath_SDM_Code"
+url: "https://github.com/[GitHub-username]/Rhizosheath_SDM_Code"
+doi: "[Zenodo DOI to be inserted after release]"
+version: "v1.0.0"
+date-released: "[YYYY-MM-DD]"
+license: "MIT"
+
+abstract: "Python workflow for global rhizosheath species distribution modelling using MaxEnt, including raster preprocessing, predictor screening, MaxEnt input preparation, post-processing, future climate projections, ensemble summarization, suitability thresholding and figure generation."
+
+keywords:
+  - rhizosheath
+  - species distribution modelling
+  - MaxEnt
+  - biogeography
+  - climate change
+  - future projection
+  - raster preprocessing
+  - Python

@@ -1,0 +1,149 @@
+# config_template.yaml
+# Template configuration file for the Rhizosheath SDM workflow.
+#
+# Copy this file to config.yaml and edit the paths according to your local file system.
+# Do not commit config.yaml if it contains machine-specific paths.
+
+project:
+  name: "Rhizosheath_SDM_Code"
+  description: "Global rhizosheath species distribution modelling using MaxEnt"
+  python_version: "3.10"
+  maxent_version: "3.4.4"
+
+paths:
+  # Root directories
+  raw_data_dir: "/path/to/raw_data"
+  processed_data_dir: "/path/to/processed_data"
+  output_dir: "/path/to/outputs"
+
+  # Occurrence records
+  occurrence_file: "/path/to/occurrence_records/Rhizosheath_occurrence.csv"
+
+  # Present-day environmental predictors
+  present_climate_dir: "/path/to/predictors/current_climate"
+  soil_dir: "/path/to/predictors/soil_hwsd2"
+  landcover_dir: "/path/to/predictors/landcover_glc_fcs10"
+  aligned_predictor_dir: "/path/to/predictors/aligned_1km"
+
+  # MaxEnt input and output
+  maxent_input_dir: "/path/to/maxent/inputs"
+  maxent_asc_dir: "/path/to/maxent/asc_layers"
+  maxent_output_dir: "/path/to/maxent/outputs"
+
+  # Future climate projections
+  future_climate_dir: "/path/to/future_climate"
+  future_projection_dir: "/path/to/future_projection_outputs"
+  ensemble_output_dir: "/path/to/ensemble_outputs"
+
+  # Figures and tables
+  table_output_dir: "/path/to/tables"
+  figure_output_dir: "/path/to/figures"
+
+occurrence:
+  species_column: "Species"
+  latitude_column: "latitude"
+  longitude_column: "longitude"
+  coordinate_system: "EPSG:4326"
+  remove_duplicate_records: true
+  spatial_thinning_applied: false
+
+spatial_settings:
+  modelling_extent: "global"
+  coordinate_reference_system: "EPSG:4326"
+  target_resolution: "approximately_1km"
+  nodata_value: -9999
+
+resampling:
+  continuous_variables: "bilinear"
+  categorical_variables: "mode"
+
+present_day_predictors:
+  climate_period: "2000-2021"
+  climate_variables:
+    - "BIO1"
+    - "BIO4"
+    - "BIO7"
+    - "BIO11"
+    - "BIO12"
+    - "BIO15"
+    - "BIO16"
+    - "BIO17"
+
+  soil_depth_interval: "0-60 cm"
+  soil_layers:
+    - "D1"
+    - "D2"
+    - "D3"
+  soil_variables:
+    - "soil_pH"
+    - "soil_organic_carbon"
+    - "soil_cation_exchange_capacity"
+    - "available_water_capacity"
+    - "clay_content"
+    - "total_nitrogen"
+
+  landcover_variables:
+    - "GLC_FCS10_landcover_class"
+
+predictor_screening:
+  pearson_correlation_screening: true
+  nodata_diagnostics: true
+  ecological_interpretability_filter: true
+  vif_used_as_final_filter: false
+
+maxent:
+  executable: "/path/to/maxent.jar"
+  output_format: "cloglog"
+  test_percentage: 15
+  background_points: 15000
+  regularization_multiplier: 1.5
+  random_seed: true
+  clamping: true
+  fade_by_clamping: true
+  response_curves: true
+  output_grids: true
+
+  present_day_full_environment_model:
+    predictors: "climate_soil_landcover"
+    replicate_type: "bootstrap"
+    replicates: 20
+
+  future_climate_only_model:
+    predictors: "climate_only"
+    replicate_type: "bootstrap"
+    replicates: 10
+
+future_projection:
+  period: "2041-2060"
+  scenarios:
+    - "SSP126"
+    - "SSP245"
+    - "SSP585"
+  gcms:
+    - "MRI-ESM2-0"
+    - "MPI-ESM1-2-HR"
+    - "EC-Earth3-Veg"
+
+ensemble:
+  statistic: "median"
+  uncertainty_metrics:
+    - "range"
+    - "standard_deviation"
+
+thresholding:
+  threshold_type: "10 percentile training presence cloglog threshold"
+  p10_threshold: 0.232
+  suitable_rule: "suitability >= 0.232"
+  unsuitable_rule: "suitability < 0.232"
+
+change_classification:
+  classes:
+    consistently_unsuitable: 0
+    lost: 1
+    gained: 2
+    stable: 3
+  main_change_map_scenario: "SSP245"
+
+outputs:
+  save_intermediate_files: true
+  overwrite_existing_outputs: false
